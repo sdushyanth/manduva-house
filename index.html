@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Manduva House – 3D Viewer</title>
   <style>
-    html, body { margin: 0; height: 100%; overflow: hidden; }
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #e8f0e4; }
     canvas { display: block; }
   </style>
 </head>
@@ -19,8 +19,13 @@
   scene.background = new THREE.Color(0xe8f0e4);
 
   // Camera
-  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
-  camera.position.set(80, 80, 120);
+  const camera = new THREE.PerspectiveCamera(
+    60,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    2000
+  );
+  camera.position.set(90, 80, 130);
 
   // Renderer
   const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -30,8 +35,9 @@
 
   // Controls
   const controls = new OrbitControls(camera, renderer.domElement);
-  controls.target.set(50, 0, 34.5);
+  controls.target.set(50, 0, 35);
   controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
   controls.update();
 
   // Lights
@@ -40,7 +46,7 @@
   sun.position.set(150, 200, 150);
   scene.add(sun);
 
-  // Plot: 100' x 69'
+  // Plot (100 x 69)
   const plot = new THREE.Mesh(
     new THREE.PlaneGeometry(100, 69),
     new THREE.MeshLambertMaterial({ color: 0xcfe8c9 })
@@ -51,17 +57,17 @@
 
   // Compound wall
   const wallMat = new THREE.MeshLambertMaterial({ color: 0xb0b0b0 });
-  function addWall(w, h, d, x, z) {
+  function wall(w, h, d, x, z) {
     const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), wallMat);
-    m.position.set(x, h/2, z);
+    m.position.set(x, h / 2, z);
     scene.add(m);
   }
-  addWall(100, 6, 1, 50, 0);     // West
-  addWall(100, 6, 1, 50, 69);    // East
-  addWall(1, 6, 69, 0, 34.5);    // South
-  addWall(1, 6, 69, 100, 34.5);  // North
+  wall(100, 6, 1, 50, 0);     // West
+  wall(100, 6, 1, 50, 69);    // East
+  wall(1, 6, 69, 0, 34.5);    // South
+  wall(1, 6, 69, 100, 34.5);  // North
 
-  // House block: 50' x 40' x 11'
+  // House mass (50 x 40 x 11)
   const house = new THREE.Mesh(
     new THREE.BoxGeometry(50, 11, 40),
     new THREE.MeshLambertMaterial({ color: 0xf5f5f0 })
@@ -69,15 +75,15 @@
   house.position.set(50, 5.5, 30);
   scene.add(house);
 
-  // Courtyard pad (visual marker)
+  // Courtyard
   const courtyard = new THREE.Mesh(
-    new THREE.BoxGeometry(8, 0.4, 8),
+    new THREE.BoxGeometry(8, 0.3, 8),
     new THREE.MeshLambertMaterial({ color: 0x9a9a9a })
   );
-  courtyard.position.set(55, 0.25, 32);
+  courtyard.position.set(55, 0.2, 32);
   scene.add(courtyard);
 
-  // Simple sloped roof proxy
+  // Sloped Manduva roof (proxy)
   const roof = new THREE.Mesh(
     new THREE.CylinderGeometry(0, 45, 12, 4, 1),
     new THREE.MeshLambertMaterial({ color: 0xa23b2a })
@@ -87,35 +93,7 @@
   scene.add(roof);
 
   // Trees (simple placeholders)
-  function addTree(x, z) {
+  function tree(x, z) {
     const trunk = new THREE.Mesh(
       new THREE.CylinderGeometry(0.5, 0.7, 6),
-      new THREE.MeshLambertMaterial({ color: 0x8b5a2b })
-    );
-    trunk.position.set(x, 3, z);
-    scene.add(trunk);
-
-    const crown = new THREE.Mesh(
-      new THREE.SphereGeometry(3, 16, 16),
-      new THREE.MeshLambertMaterial({ color: 0x2e8b57 })
-    );
-    crown.position.set(x, 7, z);
-    scene.add(crown);
-  }
-  for (let i = 0; i < 25; i++) addTree(Math.random()*100, Math.random()*69);
-
-  function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
-    renderer.render(scene, camera);
-  }
-  animate();
-
-  window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-</script>
-</body>
-</html>
+      new THREE.MeshLam
